@@ -1,6 +1,6 @@
-FROM python:3.11.4-alpine
+FROM python:3.12-alpine
 
-ENV LANG=id_ID.UTF-8 \
+ENV LANG=en_US.UTF-8 \
     SHELL=/bin/bash \
     WORK_DIR=/app
 
