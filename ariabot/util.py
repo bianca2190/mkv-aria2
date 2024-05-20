@@ -1,5 +1,7 @@
 import os
+
 from urllib.parse import urlparse
+
 
 def hum_convert(value):
     units = ["B/s", "KB/s", "MB/s", "GB/s", "TB/s", "PB/s"]
@@ -9,9 +11,10 @@ def hum_convert(value):
             return "%.2f%s" % (value, units[i])
         value /= size
 
+
 def byte2Readable(size):
     """
-    Fungsi ini mengonversi ukuran dalam byte menjadi format yang lebih mudah dibaca.
+    Recursively convert bytes to a human-readable format, precise to the maximum unit value + three decimal places
     """
 
     def strofsize(integer, remainder, level):
@@ -29,18 +32,20 @@ def byte2Readable(size):
         level = -1
     return '{}.{:>03d}{}'.format(integer, remainder, units[level])
 
+
 def progress(total_length, completed_length):
     if total_length != 0:
         return '{:.2f}%'.format(completed_length / total_length * 100)
     else:
         return "0%"
 
+
 def getFileName(task):
     if task.__contains__('bittorrent'):
         if task['bittorrent'].__contains__('info'):
-            # Untuk unduhan BT
+            # BT download
             return task['bittorrent']['info']['name']
-        # Untuk informasi dasar BT
+        # BT metadata
         return task['files'][0]['path']
     filename = task['files'][0]['path'].split('/')[-1]
     if filename == '':
@@ -48,10 +53,10 @@ def getFileName(task):
         filename = os.path.basename(pa.path)
     return filename
 
+
 def split_list(datas, n, row: bool = True):
     """
-    Fungsi ini membagi daftar satu dimensi menjadi daftar dua dimensi,
-    tergantung pada nilai N yang diberikan.
+    Convert a one-dimensional list to a two-dimensional list, generating different levels of lists based on N
     """
     length = len(datas)
     size = length / n + 1 if length % n else length / n
@@ -64,9 +69,10 @@ def split_list(datas, n, row: bool = True):
         _datas.append(datas[start:end])
     return _datas
 
+
 def format_name(string):
     """
-    Fungsi ini memformat nama file untuk tampilan yang lebih baik.
+    Format file name
     """
     head = end = ''
     middle = string
@@ -81,9 +87,10 @@ def format_name(string):
     info += f".{end}" if end else ""
     return info
 
+
 def format_lists(lst):
     """
-    Fungsi ini mengubah daftar angka yang berurutan menjadi rentang angka yang diformat.
+    Format consecutive numbers
     """
     result = []
     start = None
@@ -99,9 +106,10 @@ def format_lists(lst):
             start = None
     return ", ".join(result)
 
+
 def flatten_list(nested_list):
     """
-    Fungsi ini melakukan flatten (penggabungan) dari daftar bersarang menjadi daftar satu dimensi.
+    Flatten a nested list
     """
     flattened_list = []
     stack = [nested_list]
