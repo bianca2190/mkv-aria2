@@ -1,6 +1,6 @@
 #!/usr/bin/local/python
 # -*- coding: utf-8 -*-
-# Author: XuanPro
+# Penulis: XuanPro, MKV mod
 
 from aioaria2 import Aria2WebsocketClient
 from aioaria2.exceptions import Aria2rpcException
@@ -21,10 +21,10 @@ class Aria2Client:
             self.client = await Aria2WebsocketClient.new(self.rpc_url, token=self.rpc_token)
             await self.client.getGlobalStat()
         except Aria2rpcException:
-            await self.bot.send_message(self.user, 'Aria2连接出错, 请检查Url和Token')
+            await self.bot.send_message(self.user, 'Koneksi Aria2 gagal, harap periksa URL dan Token')
             return
 
-        # 注册回调事件
+        # Mendaftarkan event callback
         self.client.onDownloadStart(self.on_download_start)
         self.client.onDownloadPause(self.on_download_pause)
         self.client.onDownloadComplete(self.on_download_complete)
@@ -32,19 +32,19 @@ class Aria2Client:
 
     async def on_download_start(self, _trigger, data):
         gid = data['params'][0]['gid']
-        # 查询是否是绑定特征值的文件
+        # Memeriksa apakah file terikat dengan fitur khusus
         tellStatus = await self.client.tellStatus(gid)
-        await self.bot.send_message(self.user, f'{getFileName(tellStatus)}\n\n 任务已经开始下载... \n 下载目录: `{tellStatus["dir"]}`')
+        await self.bot.send_message(self.user, f'{getFileName(tellStatus)}\n\n Tugas sudah mulai diunduh... \n Direktori unduhan: `{tellStatus["dir"]}`')
 
     async def on_download_pause(self, _trigger, data):
         gid = data['params'][0]['gid']
         tellStatus = await self.client.tellStatus(gid)
-        await self.bot.send_message(self.user, f'{getFileName(tellStatus)}\n\n 任务已经成功暂停')
+        await self.bot.send_message(self.user, f'{getFileName(tellStatus)}\n\n Tugas berhasil dijeda')
 
     async def on_download_complete(self, _trigger, data):
         gid = data['params'][0]['gid']
         tellStatus = await self.client.tellStatus(gid)
-        await self.bot.send_message(self.user, f'{getFileName(tellStatus)}\n\n 任务下载完成')
+        await self.bot.send_message(self.user, f'{getFileName(tellStatus)}\n\n Tugas unduhan selesai')
 
     async def on_download_error(self, _trigger, data):
         gid = data['params'][0]['gid']
@@ -52,6 +52,6 @@ class Aria2Client:
         errorCode = tellStatus['errorCode']
         errorMessage = tellStatus['errorMessage']
         if errorCode == '12':
-            await self.bot.send_message(self.user, f'{getFileName(tellStatus)}\n\n 任务正在下载,请删除后再尝试')
+            await self.bot.send_message(self.user, f'{getFileName(tellStatus)}\n\n Tugas sedang diunduh, harap hapus dan coba lagi')
         else:
             await self.bot.send_message(self.user, errorMessage)
