@@ -503,7 +503,7 @@ def get_menu():
             Button.text('❌ Delete All')
         ],
         [
-            Button.text('🔁 Modify Download'),
+            Button.text('🔁 Edit Download'),
             Button.text('❌ Clear Completed'),
             Button.text('↩ Close Keyboard'),
         ],
