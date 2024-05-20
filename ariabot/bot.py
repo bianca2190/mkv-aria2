@@ -1,6 +1,6 @@
 #!/usr/bin/local/python
 # -*- coding: utf-8 -*-
-# Author: XuanPro
+# Author: XuanPro, MKV mod
 
 import asyncio
 import os
