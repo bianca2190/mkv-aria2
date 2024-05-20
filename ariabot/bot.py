@@ -21,19 +21,19 @@ from ariabot.util import byte2Readable, flatten_list, format_lists, format_name,
 @bot.on(events.NewMessage(pattern="/start"))
 async def start(event):
     if event.sender.id != USER_ID:
-        await event.respond('对不起，您无权使用Aria助手 😢')
+        await event.respond('Maaf, Anda tidak memiliki izin untuk menggunakan Asisten Aria 😢')
         return
     await hello()
 
 
 @bot.on(events.NewMessage(pattern='/menu', from_users=USER_ID))
 async def menu(event):
-    await event.respond('欢迎使用 **Aria2** 助手! 👏', buttons=get_menu())
+    await event.respond('Selamat datang di **Asisten Aria2**! 👏', buttons=get_menu())
 
 
 @bot.on(events.NewMessage(pattern="/close", from_users=USER_ID))
 async def close(event):
-    await event.respond("键盘已关闭\n发送 /menu 开启键盘", buttons=Button.clear())
+    await event.respond("Keyboard ditutup\nKirim /menu untuk membuka keyboard", buttons=Button.clear())
 
 
 @bot.on(events.NewMessage(pattern="/recon", from_users=USER_ID))
@@ -45,25 +45,25 @@ async def recon(event):
         end = datetime.now()
         ping_duration = (end - start).microseconds / 1000
         start = datetime.now()
-        DCinfo += f"\n封包延迟: `PING | {ping_duration}`"
+        DCinfo += f"\nLambat Ping: `PING | {ping_duration}`"
         await msg.edit(DCinfo)
         end = datetime.now()
         msg_duration = (end - start).microseconds / 1000
-        DCinfo += f"\n消息延迟:   `MSG | {msg_duration}`"
+        DCinfo += f"\nLambat Pesan:   `MSG | {msg_duration}`"
 
-    DCinfo = "**正在重连**"
+    DCinfo = "**Menghubungkan kembali**"
     msg = await event.respond(DCinfo)
     await dc_info()
     await msg.edit(DCinfo)
     await bot.reconnect()
-    DCinfo += "\n\n**重连完成**"
+    DCinfo += "\n\n**Menghubungkan kembali selesai**"
     await dc_info()
     await msg.edit(DCinfo)
 
 
 @bot.on(events.NewMessage(pattern="/reboot", from_users=USER_ID))
 async def restart(event):
-    await event.respond("正在重启Bot", buttons=Button.clear())
+    await event.respond("Bot sedang direstart", buttons=Button.clear())
     python = sys.executable
     os.execv(python, ['python', '-m', 'ariabot'])
 
@@ -71,12 +71,12 @@ async def restart(event):
 @bot.on(events.NewMessage(pattern="/help", from_users=USER_ID))
 async def helper(event):
     await event.respond(
-        'start-开始程序\n'
-        'menu-开启键盘\n'
-        'close-关闭键盘\n'
-        'recon-重连网络\n'
-        'reboot-重启bot\n'
-        'help-获取命令'
+        'start-Memulai program\n'
+        'menu-Membuka keyboard\n'
+        'close-Menutup keyboard\n'
+        'recon-Menghubungkan kembali jaringan\n'
+        'reboot-Memulai ulang bot\n'
+        'help-Mendapatkan perintah'
     )
 
 
@@ -85,44 +85,44 @@ async def lisenter(event):
     text = event.raw_text
     if Aria2.client is None or Aria2.client.closed:
         await Aria2.init()
-    if text == '🚀️ 查看状态':
+    if text == '🚀️ Lihat Status':
         await getglobalstat(event)
         return
-    elif text == '⬇ 正在下载':
+    elif text == '⬇ Sedang Mendownload':
         await downloading(event)
         return
-    elif text == '⌛ 正在等待':
+    elif text == '⌛ Sedang Menunggu':
         await waiting(event)
         return
-    elif text == '🆗 已完成/停止':
+    elif text == '🆗 Selesai/Dihentikan':
         await stoped(event)
         return
-    elif text == '⏸ 暂停任务':
+    elif text == '⏸ Jeda Tugas':
         await stopTask(event)
         return
-    elif text == '▶️ 开始任务':
+    elif text == '▶️ Mulai Tugas':
         await unstopTask(event)
         return
-    elif text == '❌ 删除任务':
+    elif text == '❌ Hapus Tugas':
         await removeTask(event)
         return
-    elif text == '🔁 修改下载':
+    elif text == '🔁 Ubah Download':
         await editTaskFile(event)
         return
-    elif text == '⏸ 全部暂停':
+    elif text == '⏸ Jeda Semua':
         await pauseAll(event)
         return
-    elif text == '▶️ 全部开始':
+    elif text == '▶️ Mulai Semua':
         await unpauseAll(event)
         return
-    elif text == '❌ 全部删除':
+    elif text == '❌ Hapus Semua':
         await removeTaskAll(event)
         return
-    elif text == '❌ 清空已结束':
+    elif text == '❌ Hapus Selesai':
         await removeAll(event)
         return
-    elif text == '↩ 关闭键盘':
-        await event.respond("键盘已关闭\n发送 /menu 开启键盘", buttons=Button.clear())
+    elif text == '↩ Tutup Keyboard':
+        await event.respond("Keyboard ditutup\nKirim /menu untuk membuka keyboard", buttons=Button.clear())
         return
 
     if 'http' in text or 'magnet' in text or 'ftp' in text:
@@ -139,7 +139,7 @@ async def lisenter(event):
     with suppress(Exception):
         if event.media and event.media.document:
             if event.media.document.mime_type == 'application/x-bittorrent':
-                await event.respond('收到了一个BT种子')
+                await event.respond('Menerima sebuah file torrent')
                 path = await bot.download_media(event.message)
                 await Aria2.client.add_torrent(path)
                 os.remove(path)
@@ -152,17 +152,17 @@ async def hello():
     giturl = 'https://github.com/xuanpro/ariabot'
     await bot.send_message(
         USER_ID,
-        '欢迎使用 **Aria2** 助手! 👏\n\n'
-        '发送 /start 开始程序\n'
-        '发送 /menu  开启菜单\n'
-        '发送 /close 关闭菜单\n'
-        '发送 /recon 重连网络\n'
-        '发送 /reboot 重启bot\n'
-        '发送 /help 获取命令',
+        'Selamat datang di **Asisten Aria2**! 👏\n\n'
+        'Kirim /start untuk memulai program\n'
+        'Kirim /menu untuk membuka menu\n'
+        'Kirim /close untuk menutup menu\n'
+        'Kirim /recon untuk menghubungkan kembali jaringan\n'
+        'Kirim /reboot untuk memulai ulang bot\n'
+        'Kirim /help untuk mendapatkan perintah',
         buttons=[Button.url('🚀️AriaNg', url), Button.url('Github', giturl)])
 
 
-# 文本按钮回调方法=============================
+# Metode Kembali Panggilan Tombol Teks=============================
 
 
 async def getglobalstat(event):
@@ -172,20 +172,20 @@ async def getglobalstat(event):
     numActive = res['numActive']
     numWaiting = res['numWaiting']
     numStopped = res['numStopped']
-    info = f'欢迎使用 **Aria2** 助手! 👏\n\n'
-    info += f'下载：`{downloadSpeed}`\n'
-    info += f'上传：`{uploadSpeed}`\n'
-    info += f'正在下载：`{numActive}`\n'
-    info += f'正在等待：`{numWaiting}`\n'
-    info += f'已完成/已停止：`{numStopped}`'
+    info = f'Selamat datang di **Asisten Aria2**! 👏\n\n'
+    info += f'Download: `{downloadSpeed}`\n'
+    info += f'Upload: `{uploadSpeed}`\n'
+    info += f'Sedang mengunduh: `{numActive}`\n'
+    info += f'Sedang menunggu: `{numWaiting}`\n'
+    info += f'Selesai/Dihentikan: `{numStopped}`'
     await event.respond(info)
 
 
 async def downloading(event):
-    # 正在下载的任务
+    # Tugas yang sedang diunduh
     tasks = await Aria2.client.tellActive()
     if not tasks:
-        await event.respond('没有正在运行的任务')
+        await event.respond('Tidak ada tugas yang sedang berjalan')
         return
     send_str = ''
     for task in tasks:
@@ -198,19 +198,18 @@ async def downloading(event):
         prog = progress(int(totalLength), int(completedLength))
         size = byte2Readable(int(totalLength))
         speed = hum_convert(int(downloadSpeed))
-        send_str += f'任务名称: {fileName}\n进度: {prog}\n大小: {size}\n速度: {speed}\n\n'
+        send_str += f'Nama Tugas: {fileName}\nProgress: {prog}\nUkuran: {size}\nKecepatan: {speed}\n\n'
     if send_str:
         for i in range(0, len(send_str), 4000):
             await event.respond(send_str[i:i + 4000])
     else:
-        await event.respond('无法识别任务名称，请发送 /start 使用AriaNG查看')
-
+        await event.respond('Tidak dapat mengenali nama tugas, kirim /start untuk menggunakan AriaNG')
 
 async def waiting(event):
-    # 正在等待的任务
+    # Tugas yang sedang menunggu
     tasks = await Aria2.client.tellWaiting(0, 1000)
     if not tasks:
-        await event.respond('任务列表为空')
+        await event.respond('Daftar tugas kosong')
         return
     send_str = ''
     for task in tasks:
@@ -221,19 +220,19 @@ async def waiting(event):
         prog = progress(int(totalLength), int(completedLength))
         size = byte2Readable(int(totalLength))
         speed = hum_convert(int(downloadSpeed))
-        send_str += f'任务名称: {fileName}\n进度: {prog}\n大小: {size}\n速度: {speed}\n\n'
+        send_str += f'Nama Tugas: {fileName}\nProgress: {prog}\nUkuran: {size}\nKecepatan: {speed}\n\n'
     if send_str:
         for i in range(0, len(send_str), 4000):
             await event.respond(send_str[i:i + 4000])
     else:
-        await event.respond('无法识别任务名称，请发送 /start 使用AriaNG查看')
+        await event.respond('Tidak dapat mengenali nama tugas, kirim /start untuk menggunakan AriaNG')
 
 
 async def stoped(event):
-    # 已完成/停止的任务
+    # Tugas yang selesai/dihentikan
     tasks = await Aria2.client.tellStopped(0, 1000)
     if not tasks:
-        await event.respond('任务列表为空')
+        await event.respond('Daftar tugas kosong')
         return
     send_str = ''
     for task in tasks:
@@ -244,18 +243,18 @@ async def stoped(event):
         prog = progress(int(totalLength), int(completedLength))
         size = byte2Readable(int(totalLength))
         speed = hum_convert(int(downloadSpeed))
-        send_str += f'任务名称: {fileName}\n进度: {prog}\n大小: {size}\n速度: {speed}\n\n'
+        send_str += f'Nama Tugas: {fileName}\nProgress: {prog}\nUkuran: {size}\nKecepatan: {speed}\n\n'
     if send_str:
         for i in range(0, len(send_str), 4000):
             await event.respond(send_str[i:i + 4000])
     else:
-        await event.respond('无法识别任务名称，请发送 /start 使用AriaNG查看')
+        await event.respond('Tidak dapat mengenali nama tugas, kirim /start untuk menggunakan AriaNG')
 
 
 async def unstopTask(event):
     tasks = await Aria2.client.tellWaiting(0, 1000)
     if not tasks:
-        await event.respond('任务列表为空')
+        await event.respond('Daftar tugas kosong')
         return
     buttons = []
     for task in tasks:
@@ -263,22 +262,22 @@ async def unstopTask(event):
         buttons.append(Button.inline(format_name(fileName), task['gid']))
     try:
         async with bot.conversation(event.sender.id, timeout=60) as conv:
-            res, data, msg = await get_pagesplit('请选择要开始▶ 的任务', event, buttons, conv)
+            res, data, msg = await get_pagesplit('Pilih tugas yang ingin dimulai▶️', event, buttons, conv)
             if res:
                 await msg.delete()
                 await Aria2.client.unpause(data)
     except AlreadyInConversationError:
-        wait = await bot.send_message(event.sender.id, "无法在同个聊天内启动多个对话")
+        wait = await bot.send_message(event.sender.id, "Tidak dapat memulai lebih dari satu percakapan dalam obrolan yang sama")
         await asyncio.sleep(5)
         await wait.delete()
     except TimeoutError:
-        await bot.edit_message(msg, "选择已超时")
+        await bot.edit_message(msg, "Waktu untuk memilih telah habis")
 
 
 async def stopTask(event):
     tasks = await Aria2.client.tellActive()
     if not tasks:
-        await event.respond('任务列表为空')
+        await event.respond('Daftar tugas kosong')
         return
     buttons = []
     for task in tasks:
@@ -287,17 +286,16 @@ async def stopTask(event):
         buttons.append(Button.inline(format_name(fileName), gid))
     try:
         async with bot.conversation(event.sender.id, timeout=60) as conv:
-            res, data, msg = await get_pagesplit('请选择要暂停⏸ 的任务', event, buttons, conv)
+            res, data, msg = await get_pagesplit('Pilih tugas yang ingin dijeda⏸', event, buttons, conv)
             if res:
                 await msg.delete()
                 await Aria2.client.pause(data)
     except AlreadyInConversationError:
-        wait = await bot.send_message(event.sender.id, "无法在同个聊天内启动多个对话")
+        wait = await bot.send_message(event.sender.id, "Tidak dapat memulai lebih dari satu percakapan dalam obrolan yang sama")
         await asyncio.sleep(5)
         await wait.delete()
     except TimeoutError:
-        await bot.edit_message(msg, "选择已超时")
-
+        await bot.edit_message(msg, "Waktu untuk memilih telah habis")
 
 async def removeTask(event):
     tasks1 = await Aria2.client.tellActive()
@@ -305,7 +303,7 @@ async def removeTask(event):
     tasks3 = await Aria2.client.tellStopped(0, 1000)
     tasks = tasks1 + tasks2
     if not (tasks + tasks3):
-        await event.respond('任务列表为空')
+        await event.respond('Daftar tugas kosong')
         return
     buttons = []
     for task in tasks:
@@ -315,23 +313,23 @@ async def removeTask(event):
     for task in tasks3:
         fileName = getFileName(task)
         gid = task['gid']
-        buttons.append(Button.inline(format_name('结束·' + fileName), 'result->' + gid))
+        buttons.append(Button.inline(format_name('Selesai·' + fileName), 'result->' + gid))
     try:
         async with bot.conversation(event.sender.id, timeout=60) as conv:
-            res, data, msg = await get_pagesplit('请选择要删除❌ 的任务', event, buttons, conv)
+            res, data, msg = await get_pagesplit('Pilih tugas yang ingin dihapus❌', event, buttons, conv)
             if res:
                 mode, gid = data.split('->', 1)
                 if mode == 'result':
                     await Aria2.client.removeDownloadResult(gid)
                 else:
                     await Aria2.client.remove(gid)
-                await bot.edit_message(msg, '任务删除成功')
+                await bot.edit_message(msg, 'Tugas berhasil dihapus')
     except AlreadyInConversationError:
-        wait = await bot.send_message(event.sender.id, "无法在同个聊天内启动多个对话")
+        wait = await bot.send_message(event.sender.id, "Tidak dapat memulai lebih dari satu percakapan dalam obrolan yang sama")
         await asyncio.sleep(5)
         await wait.delete()
     except TimeoutError:
-        await bot.edit_message(msg, "选择已超时")
+        await bot.edit_message(msg, "Waktu untuk memilih telah habis")
 
 
 async def editTaskFile(event):
@@ -339,7 +337,7 @@ async def editTaskFile(event):
     tasks2 = await Aria2.client.tellWaiting(0, 1000)
     tasks = tasks1 + tasks2
     if not tasks:
-        await event.respond('任务列表为空')
+        await event.respond('Daftar tugas kosong')
         return
     buttons = []
     for task in tasks:
@@ -348,15 +346,15 @@ async def editTaskFile(event):
         buttons.append(Button.inline(format_name(fileName), gid))
     try:
         async with bot.conversation(event.sender.id, timeout=60) as conv:
-            res, data, msg = await get_pagesplit('请选择要修改的任务', event, buttons, conv)
+            res, data, msg = await get_pagesplit('Pilih tugas yang ingin diubah', event, buttons, conv)
             if res:
                 await editToTaskFile(res, conv, data)
     except AlreadyInConversationError:
-        wait = await bot.send_message(event.sender.id, "无法在同个聊天内启动多个对话")
+        wait = await bot.send_message(event.sender.id, "Tidak dapat memulai lebih dari satu percakapan dalam obrolan yang sama")
         await asyncio.sleep(5)
         await wait.delete()
     except TimeoutError:
-        await bot.edit_message(msg, "选择已超时")
+        await bot.edit_message(msg, "Waktu untuk memilih telah habis")
 
 
 async def removeTaskAll(event):
@@ -364,35 +362,35 @@ async def removeTaskAll(event):
     tasks2 = await Aria2.client.tellWaiting(0, 1000)
     tasks = tasks1 + tasks2
     if not tasks:
-        await event.respond('任务列表为空')
+        await event.respond('Daftar tugas kosong')
         return
     for task in tasks:
         await Aria2.client.remove(task['gid'])
-    await event.respond('删除所有任务')
+    await event.respond('Menghapus semua tugas')
 
 
-# 暂停所有
+# Jeda semua
 async def pauseAll(event):
     await Aria2.client.pauseAll()
-    await event.respond('暂停所有任务')
+    await event.respond('Semua tugas dijeda')
 
 
-# 开始所有
+# Mulai semua
 async def unpauseAll(event):
     await Aria2.client.unpauseAll()
-    await event.respond('开始所有任务')
+    await event.respond('Semua tugas dimulai')
 
 
-# 调用清除全部已完成/停止
+# Panggil hapus semua selesai/berhenti
 async def removeAll(event):
-    # 删除已完成或停止
+    # Hapus selesai atau berhenti
     await Aria2.client.purgeDownloadResult()
-    await event.respond('任务已清空')
+    await event.respond('Tugas telah dihapus semua')
 
 
-# 编辑文件
+# Mengedit berkas
 async def editToTaskFile(event, conv, gid):
-    msg = await event.edit('请稍后正在查询...')
+    msg = await event.edit('Harap tunggu, sedang mengambil informasi...')
     filesinfo = await Aria2.client.getFiles(gid)
     buttons = []
     for task in filesinfo:
@@ -406,9 +404,9 @@ async def editToTaskFile(event, conv, gid):
         if len(btns) > line:
             btns = split_list(btns, line)
             my_btns = [
-                Button.inline('上一页', data='up'),
+                Button.inline('Halaman Sebelumnya', data='up'),
                 Button.inline(f'{page + 1}/{len(btns)}', data='jump'),
-                Button.inline('下一页', data='next')
+                Button.inline('Halaman Berikutnya', data='next')
             ]
             if page > len(btns) - 1:
                 page = 0
@@ -416,14 +414,14 @@ async def editToTaskFile(event, conv, gid):
             new_btns.append(my_btns)
         else:
             new_btns = btns
-        new_btns.append([Button.inline('当页全选', 'checkall'), Button.inline('排除选择', 'exclude'), Button.inline('包含选择', 'over')])
+        new_btns.append([Button.inline('Pilih Semua di Halaman', 'checkall'), Button.inline('Kecuali yang Dipilih', 'exclude'), Button.inline('Sertakan yang Dipilih', 'over')])
         new_btns.append(get_cancel())
         with suppress(MessageNotModifiedError):
-            msg = await msg.edit('请选择要下载的任务(可多选)' + (f"\n当前选择：{format_lists(ids)}" if ids else ''), buttons=new_btns)
+            msg = await msg.edit('Pilih tugas yang ingin diunduh (bisa memilih lebih dari satu)' + (f"\nPilihan saat ini: {format_lists(ids)}" if ids else ''), buttons=new_btns)
         res_1 = await conv.wait_event(press_event(event))
         data_1 = res_1.data.decode()
         if data_1 == 'cancel':
-            await bot.edit_message(msg, '取消选择')
+            await bot.edit_message(msg, 'Pemilihan dibatalkan')
             return
         elif data_1 == 'up':
             page -= 1
@@ -436,10 +434,10 @@ async def editToTaskFile(event, conv, gid):
                 page = 0
             continue
         elif data_1 == 'jump':
-            page_btns = [Button.inline(f'第 {i + 1} 页 {1 + i * line * size} - {(1 + i) * line * size}', data=str(i)) for i in range(len(btns))]
+            page_btns = [Button.inline(f'Halaman {i + 1} {1 + i * line * size} - {(1 + i) * line * size}', data=str(i)) for i in range(len(btns))]
             page_btns = split_list(page_btns, 3)
-            page_btns.append([Button.inline('返回', data='cancel')])
-            await bot.edit_message(msg, '请选择跳转页面', buttons=page_btns)
+            page_btns.append([Button.inline('Kembali', data='cancel')])
+            await bot.edit_message(msg, 'Pilih halaman untuk melompat', buttons=page_btns)
             res_2 = await conv.wait_event(press_event(event))
             data_2 = res_2.data.decode()
             if data_2 == 'cancel':
@@ -469,13 +467,13 @@ async def editToTaskFile(event, conv, gid):
         if len(ids) == len(filesinfo):
             break
     if ids:
-        msg = await bot.edit_message(msg, f"当前选择：{format_lists(ids)}")
+        msg = await bot.edit_message(msg, f"Seleksi saat ini: {format_lists(ids)}")
         args = {'select-file': ','.join(ids), 'bt-remove-unselected-file': 'true'}
         with suppress(Exception):
             await Aria2.client.changeOption(gid, args)
-        await msg.edit(msg.text + '\n修改完成')
+        await msg.edit(msg.text + '\nPenyuntingan selesai')
     else:
-        await bot.edit_message(msg, f"未修改")
+        await bot.edit_message(msg, f"Tidak ada penyuntingan yang dilakukan")
 
 
 def press_event(event):
@@ -485,33 +483,33 @@ def press_event(event):
 def get_menu():
     return [
         [
-            Button.text('🚀️ 查看状态'),
+            Button.text('🚀️ Lihat Status'),
         ],
         [
-            Button.text('⬇ 正在下载'),
-            Button.text('⌛ 正在等待'),
-            Button.text('🆗 已完成/停止')
+            Button.text('⬇ Sedang Mendownload'),
+            Button.text('⌛ Sedang Menunggu'),
+            Button.text('🆗 Sudah Selesai/Stop')
         ],
         [
-            Button.text('▶️ 开始任务'),
-            Button.text('⏸ 暂停任务'),
-            Button.text('❌ 删除任务'),
+            Button.text('▶️ Mulai Tugas'),
+            Button.text('⏸ Jeda Tugas'),
+            Button.text('❌ Hapus Tugas'),
         ],
         [
-            Button.text('▶️ 全部开始'),
-            Button.text('⏸ 全部暂停'),
-            Button.text('❌ 全部删除')
+            Button.text('▶️ Mulai Semua'),
+            Button.text('⏸ Jeda Semua'),
+            Button.text('❌ Hapus Semua')
         ],
         [
-            Button.text('🔁 修改下载'),
-            Button.text('❌ 清空已结束'),
-            Button.text('↩ 关闭键盘'),
+            Button.text('🔁 Ubah Download'),
+            Button.text('❌ Kosongkan yang Telah Selesai'),
+            Button.text('↩ Tutup Keyboard'),
         ],
     ]
 
 
 def get_cancel():
-    return [Button.inline('取消', 'cancel')]
+    return [Button.inline('Batal', 'cancel')]
 
 
 async def get_pagesplit(text, event, buttons, conv):
@@ -524,9 +522,9 @@ async def get_pagesplit(text, event, buttons, conv):
         if len(btns) > line:
             btns = split_list(btns, line)
             my_btns = [
-                Button.inline('上一页', data='up'),
+                Button.inline('Halaman Sebelumnya', data='up'),
                 Button.inline(f'{page + 1}/{len(btns)}', data='jump'),
-                Button.inline('下一页', data='next')
+                Button.inline('Halaman Berikutnya', data='next')
             ]
             if page > len(btns) - 1:
                 page = 0
@@ -539,7 +537,7 @@ async def get_pagesplit(text, event, buttons, conv):
         res = await conv.wait_event(press_event(event))
         data = res.data.decode()
         if data == 'cancel':
-            await bot.edit_message(msg, '取消选择')
+            await bot.edit_message(msg, 'Pemilihan dibatalkan')
             return None, None, msg
         elif data == 'up':
             page -= 1
@@ -552,10 +550,10 @@ async def get_pagesplit(text, event, buttons, conv):
                 page = 0
             continue
         elif data == 'jump':
-            page_btns = [Button.inline(f'第 {i + 1} 页 {1 + i * line * size} - {(1 + i) * line * size}', data=str(i)) for i in range(len(btns))]
+            page_btns = [Button.inline(f'Halaman {i + 1} {1 + i * line * size} - {(1 + i) * line * size}', data=str(i)) for i in range(len(btns))]
             page_btns = split_list(page_btns, 3)
-            page_btns.append([Button.inline('返回', data='cancel')])
-            await bot.edit_message(msg, '请选择跳转页面', buttons=page_btns)
+            page_btns.append([Button.inline('Kembali', data='cancel')])
+            await bot.edit_message(msg, 'Pilih halaman untuk melompat', buttons=page_btns)
             res_2 = await conv.wait_event(press_event(event))
             data_2 = res_2.data.decode()
             if data_2 == 'cancel':
