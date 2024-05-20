@@ -1,6 +1,6 @@
 #!/usr/bin/local/python
 # -*- coding: utf-8 -*-
-# Author: XuanPro
+# Author: XuanPro , MKV mod
 
 import contextlib
 import logging
@@ -27,14 +27,14 @@ Proxy_User = os.getenv('Proxy_User')
 Proxy_Passwd = os.getenv('Proxy_Passwd')
 Proxy_Secret = os.getenv('Proxy_Secret')
 
-# 日志
+# Logging
 logging.basicConfig(format='%(asctime)s-%(name)s-%(levelname)s=> [%(funcName)s] %(message)s ', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# TG代理
+# TG Proxy
 connectionType = connection.ConnectionTcpMTProxyRandomizedIntermediate if Proxy_Type == "MTProxy" else connection.ConnectionTcpFull
 
-# 获取代理
+# Get proxy
 if Proxy_Type:
     if Proxy_User:
         proxy = {
