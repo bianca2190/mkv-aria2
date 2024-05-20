@@ -1,6 +1,6 @@
 #!/usr/bin/local/python
 # -*- coding: utf-8 -*-
-# Author: XuanPro , MKV mod
+# Author: XuanPro, MKV mod
 
 import contextlib
 import logging
@@ -31,7 +31,7 @@ Proxy_Secret = os.getenv('Proxy_Secret')
 logging.basicConfig(format='%(asctime)s-%(name)s-%(levelname)s=> [%(funcName)s] %(message)s ', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# TG Proxy
+# Telegram proxy
 connectionType = connection.ConnectionTcpMTProxyRandomizedIntermediate if Proxy_Type == "MTProxy" else connection.ConnectionTcpFull
 
 # Get proxy
