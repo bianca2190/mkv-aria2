@@ -1,6 +1,6 @@
-FROM python:3.11.4-alpine
+FROM python:3.12-alpine
 
-ENV LANG=zh_CN.UTF-8 \
+ENV LANG=en_US.UTF-8 \
     SHELL=/bin/bash \
     WORK_DIR=/app
 
@@ -14,8 +14,8 @@ RUN set -x \
     && apk update -f \
     && apk upgrade \
     && apk --no-cache add -f gcc \
-    && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
-    && echo "Asia/Shanghai" > /etc/timezone \
+    && ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime \
+    && echo "Asia/Jakarta" > /etc/timezone \
     && pip install --upgrade pip setuptools wheel \
     && pip install --no-cache-dir -r ${WORK_DIR}/requirements.txt \
     && apk del gcc \
