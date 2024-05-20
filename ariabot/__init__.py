@@ -31,7 +31,7 @@ Proxy_Secret = os.getenv('Proxy_Secret')
 logging.basicConfig(format='%(asctime)s-%(name)s-%(levelname)s=> [%(funcName)s] %(message)s ', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Telegram proxy
+# TG Proxy
 connectionType = connection.ConnectionTcpMTProxyRandomizedIntermediate if Proxy_Type == "MTProxy" else connection.ConnectionTcpFull
 
 # Get proxy
