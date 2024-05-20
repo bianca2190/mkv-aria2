@@ -171,7 +171,7 @@ async def getglobalstat(event):
     uploadSpeed = hum_convert(int(res['uploadSpeed']))
     numActive = res['numActive']
     numWaiting = res['numWaiting']
-    numStopped = res['numStopped'])
+    numStopped = res['numStopped']
     info = f'Welcome to **Aria2** assistant! 👏\n\n'
     info += f'Download: `{downloadSpeed}`\n'
     info += f'Upload: `{uploadSpeed}`\n'
